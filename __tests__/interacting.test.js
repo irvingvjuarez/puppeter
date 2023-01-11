@@ -25,14 +25,8 @@ describe("Interacting with elements", () => {
 		await page.click("#authentication > span", { button: "right" })
 		await page.click("#context-menu-layer + ul > li:first-child", { delay: 1000 })
 
-		await page.evaluate(() => {
-			const buttons = [...document.querySelectorAll("button")]
-			const wantedButton = buttons.find(btn => btn.textContent == "Double-Click Me To See Alert")
-
-			if (wantedButton) {
-				wantedButton.click()
-			}
-		})
+		await page.click("#authentication > button", { clickCount: 2 })
+		// await page.waitForTimeout(3000)
 
 		browser.close()
 	}, MAX_TIMEOUT)
