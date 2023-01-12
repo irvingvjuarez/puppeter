@@ -7,14 +7,18 @@ describe("Extracting info and using it in another test", () => {
 	beforeAll(async () => {
 		browser = await puppeteer.launch({
 			defaultViewport: null,
-			headless: true
+			headless: false,
+			args: ["--user-agent=foo"]
 		})
 
 		page = await browser.newPage()
 	}, MAX_TIMEOUT)
 
-	afterAll(() => {
-		// browser.close()
+	afterAll(async () => {
+		const browserOpen = await page.evaluate(() => navigator.userAgent)
+		if (browserOpen) {
+			browser.close()
+		}
 	}, MAX_TIMEOUT)
 
 	it("Extracting title of the page", async () => {
