@@ -2,12 +2,12 @@ const puppeteer = require("puppeteer")
 const { MAX_TIMEOUT } = require("../globals")
 
 describe("Extracting info and using it in another test", () => {
-	let browser, page, title
+	let browser, page, latestCourse
 
 	beforeAll(async () => {
 		browser = await puppeteer.launch({
 			defaultViewport: null,
-			headless: false,
+			headless: true,
 			args: ["--user-agent=foo"]
 		})
 
@@ -21,13 +21,15 @@ describe("Extracting info and using it in another test", () => {
 		}
 	}, MAX_TIMEOUT)
 
-	it("Extracting title of the page", async () => {
+	it("Extracting latest released course", async () => {
 		await page.goto("https://platzi.com", { waitUntil: "networkidle0" })
-		title = await page.title()
+		const cssSelector = ".RecentLaunches-list > a:first-child .RecentLaunches-card-content"
+		await page.waitForSelector(cssSelector)
 
+		latestCourse = await page.$eval(cssSelector, (el) => el.textContent)
 	}, MAX_TIMEOUT)
 
 	it("Should match the title with a text", () => {
-		expect(title).toMatch("Cursos Online")
-	})
+		expect(latestCourse).toMatch("Ethereum")
+	}, MAX_TIMEOUT)
 })
