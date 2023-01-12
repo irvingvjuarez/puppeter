@@ -22,14 +22,21 @@ describe("Testing different waiting types", () => {
 		await page.goto("https://demoqa.com/modal-dialogs", { waitUntil: "networkidle0" })
 		await page.click("#showSmallModal")
 
-		// await page.waitForSelector(".modal-content", { visible: true })
-		await page.waitForFunction(() => {
-			return document.getElementById("example-modal-sizes-title-sm").textContent == "Small Modal"
-		})
+		await page.waitForSelector(".modal-content", { visible: true })
+		// await page.waitForFunction(() => {
+		// 	return document.getElementById("example-modal-sizes-title-sm").textContent == "Small Modal"
+		// })
 
-		const observeResize = page.waitForFunction("window.innerWidth <= 250")
-		await page.setViewport({ width: 199, height: 500 })
+		await new Promise(r => setTimeout(r, 3000))
 
-		await observeResize
+		await page.click("button.close")
+		// await page.waitForSelector(".modal-content", { visible: false })
+
+		await new Promise(r => setTimeout(r, 3000))
+
+		// const observeResize = page.waitForFunction("window.innerWidth <= 250")
+		// await page.setViewport({ width: 199, height: 500 })
+
+		// await observeResize
 	}, MAX_TIMEOUT)
 })
