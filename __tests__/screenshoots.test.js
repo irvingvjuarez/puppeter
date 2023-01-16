@@ -44,7 +44,7 @@ describe("Screenshots", () => {
 		})
 	})
 
-	it.only("Screenshot to a certain element", async () => {
+	it("Screenshot to a certain element", async () => {
 		const testBtn = await page.waitForSelector("a[href='/forms/profile_test/']")
 
 		await testBtn.screenshot({
