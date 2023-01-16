@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit --detectOpenHandles"
+    "test": "jest --forceExit --detectOpenHandles",
+		"test:emulate": "jest --forceExit --detectOpenHandles __tests__/emulating.test.js"
   },
   "repository": {
     "type": "git",
