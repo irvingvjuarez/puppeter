@@ -32,4 +32,33 @@ describe("Visual testings", () => {
 
 		expect(ss).toMatchImageSnapshot()
 	}, MAX_TIMEOUT)
+
+	it("Snapshot test of only one element", async () => {
+		const logo = await page.waitForSelector("img[alt='Google']")
+		const ss = await logo.screenshot()
+
+		expect(ss).toMatchImageSnapshot({
+			failureThreshold: 0.5,
+			failureThresholdType: "percent"
+		})
+	})
+
+	it("Snapshot test of a mobile device", async () => {
+		const mobile = puppeteer.KnownDevices["iPhone 12"]
+		await page.emulate(mobile)
+
+		const ss = await page.screenshot()
+		expect(ss).toMatchImageSnapshot()
+	})
+
+	it("Remove image before to create a snapshot", async () => {
+		await page.waitForSelector("img")
+		await page.evaluate(() => [...document.querySelectorAll("img")].forEach(el => {
+			el.remove()
+		}))
+
+		const ss = await page.screenshot()
+
+		expect(ss).toMatchImageSnapshot()
+	})
 })
