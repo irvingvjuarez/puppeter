@@ -9,14 +9,15 @@ describe("Emulating devices", () => {
 			headless: false
 		})
 
-		page = await browser.newPage()
+		const context = await browser.createIncognitoBrowserContext()
+		page = await context.newPage()
 	})
 
 	beforeEach(async () => {
 		await page.goto("https://platzi.com")
 	})
 
-	it("Emulating mobile phone", async () => {
+	it.only("Emulating mobile phone", async () => {
 		await page.emulate({
 			name: "Mobile device",
 			viewport: {
