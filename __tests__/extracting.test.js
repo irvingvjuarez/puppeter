@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer")
 const { MAX_TIMEOUT } = require("../globals")
+const { getText } = require("../lib/helpers")
 
 describe("Extracting info and using it in another test", () => {
 	let browser, page, latestCourse
@@ -24,9 +25,7 @@ describe("Extracting info and using it in another test", () => {
 	it("Extracting latest released course", async () => {
 		await page.goto("https://platzi.com", { waitUntil: "networkidle0" })
 		const cssSelector = ".RecentLaunches-list > a:first-child .RecentLaunches-card-content"
-		await page.waitForSelector(cssSelector)
-
-		latestCourse = await page.$eval(cssSelector, (el) => el.textContent)
+		latestCourse = await getText(page, cssSelector)
 	}, MAX_TIMEOUT)
 
 	it("Should match the title with a text", () => {

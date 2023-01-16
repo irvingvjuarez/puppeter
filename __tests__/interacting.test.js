@@ -1,5 +1,6 @@
 const puppetter = require("puppeteer")
 const { MAX_TIMEOUT } = require("../globals")
+const { click, doubleClick } = require("../lib/helpers")
 
 describe("Interacting with elements", () => {
 	let browser, page
@@ -22,10 +23,10 @@ describe("Interacting with elements", () => {
 	// })
 
 	it("Should interact with right click", async () => {
-		await page.click("#authentication > span", { button: "right" })
-		await page.click("#context-menu-layer + ul > li:first-child", { delay: 1000 })
+		await click(page, "#authentication > span", { button: "right" })
+		await click(page, "#context-menu-layer + ul > li:first-child", { delay: 1000 })
 
-		await page.click("#authentication > button", { clickCount: 2 })
+		await doubleClick(page, "#authentication > button")
 		// await page.waitForTimeout(3000)
 
 		browser.close()
