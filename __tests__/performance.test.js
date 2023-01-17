@@ -1,7 +1,9 @@
 const puppeteer = require("puppeteer")
+const fs = require("fs")
 const { MAX_TIMEOUT } = require("../globals")
 
 describe("Testing app performance", () => {
+	const URL = "https://platzi.com"
 	let browser, page
 
 	beforeAll(async () => {
@@ -14,7 +16,7 @@ describe("Testing app performance", () => {
 	})
 
 	// beforeEach(async () => {
-	// 	await page.goto("https://platzi.com")
+	// 	await page.goto(URL)
 	// }, MAX_TIMEOUT)
 
 	afterAll(async () => {
@@ -34,13 +36,42 @@ describe("Testing app performance", () => {
 		console.log(JSON.parse(performance))
 	})
 
-	it.only("Measuring the page performance", async () => {
+	it("Getting even more information about the page performance", async () => {
 		await page.tracing.start({
 			path: "./performance/profile.json"
 		})
 
-		await page.goto("https://platzi.com")
+		await page.goto(URL)
 
 		await page.tracing.stop()
+	}, MAX_TIMEOUT)
+
+	it.only("Measuring performance w/screenshots", async () => {
+		await page.tracing.start({
+			path: "./performance/profile.json",
+			screenshots: true
+		})
+
+		await page.goto(URL)
+
+		await page.tracing.stop()
+
+		// Decoding screenshots from profile.json file
+		let tracing = fs.readFileSync("./performance/profile.json", "utf-8")
+		tracing = JSON.parse(tracing)
+
+		const traceScreenshots = tracing.traceEvents.filter(event =>
+			event.cat == "disabled-by-default-devtools.screenshot" &&
+			event.name == "Screenshot" &&
+			event.args != "undefined" &&
+			event.args.snapshot != "undefined"
+		)
+
+		// Writing the snapshots
+		traceScreenshots.forEach((ss, index) => {
+			fs.writeFile(`screenshots/tracing/ss-${index + 1}.png`, ss.args.snapshot, "base64", (err) => {
+				if(err) console.log("Unable to create the tracing screenshot")
+			})
+		})
 	}, MAX_TIMEOUT)
 })
