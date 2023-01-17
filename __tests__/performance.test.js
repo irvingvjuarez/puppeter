@@ -27,4 +27,10 @@ describe("Testing app performance", () => {
 
 		console.log(metrics)
 	})
+
+	it("Measuring the page performance", async () => {
+		await page.waitForSelector("img")
+		const performance = await page.evaluate(() => JSON.stringify(window.performance))
+		console.log(JSON.parse(performance))
+	})
 })
