@@ -13,9 +13,9 @@ describe("Testing app performance", () => {
 		page = await browser.newPage()
 	})
 
-	beforeEach(async () => {
-		await page.goto("https://platzi.com")
-	}, MAX_TIMEOUT)
+	// beforeEach(async () => {
+	// 	await page.goto("https://platzi.com")
+	// }, MAX_TIMEOUT)
 
 	afterAll(async () => {
 		await browser.close()
@@ -28,9 +28,19 @@ describe("Testing app performance", () => {
 		console.log(metrics)
 	})
 
-	it("Measuring the page performance", async () => {
+	it("Getting the page performance info", async () => {
 		await page.waitForSelector("img")
 		const performance = await page.evaluate(() => JSON.stringify(window.performance))
 		console.log(JSON.parse(performance))
 	})
+
+	it.only("Measuring the page performance", async () => {
+		await page.tracing.start({
+			path: "./performance/profile.json"
+		})
+
+		await page.goto("https://platzi.com")
+
+		await page.tracing.stop()
+	}, MAX_TIMEOUT)
 })
