@@ -75,7 +75,7 @@ describe("Testing app performance", () => {
 		})
 	}, MAX_TIMEOUT)
 
-	it.only("First paint and contentful paint performance measure", async () => {
+	it("First paint and contentful paint performance measure", async () => {
 		const navigationPromise = page.waitForNavigation()
 
 		await page.goto(URL)
@@ -89,5 +89,19 @@ describe("Testing app performance", () => {
 		performanceInfo = JSON.parse(performanceInfo)
 
 		console.log(performanceInfo)
+	}, MAX_TIMEOUT)
+
+	it.only("Frame per second performance test", async () => {
+		const devtoolsProtocolClient = await page.target().createCDPSession()
+		await devtoolsProtocolClient.send("Overlay.setShowFPSCounter", {
+			show: true
+		})
+
+		await page.goto(URL)
+
+		await page.screenshot({
+			path: "screenshots/frames/fps.jpeg",
+			type: "jpeg"
+		})
 	}, MAX_TIMEOUT)
 })

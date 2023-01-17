@@ -1,7 +1,8 @@
 node_modules
 
 __image_snapshots__
-pdfs
-screenshots
-performance
-screenshots/tracing
+pdfs/*.pdf
+performance/*.json
+screenshots/tracing/*.png
+screenshots/frames/*.jpeg
+screenshots/*.png
