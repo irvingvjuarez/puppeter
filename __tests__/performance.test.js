@@ -46,7 +46,7 @@ describe("Testing app performance", () => {
 		await page.tracing.stop()
 	}, MAX_TIMEOUT)
 
-	it.only("Measuring performance w/screenshots", async () => {
+	it("Measuring performance w/screenshots", async () => {
 		await page.tracing.start({
 			path: "./performance/profile.json",
 			screenshots: true
@@ -73,5 +73,21 @@ describe("Testing app performance", () => {
 				if(err) console.log("Unable to create the tracing screenshot")
 			})
 		})
+	}, MAX_TIMEOUT)
+
+	it.only("First paint and contentful paint performance measure", async () => {
+		const navigationPromise = page.waitForNavigation()
+
+		await page.goto(URL)
+		await navigationPromise
+
+		let performanceInfo = await page.evaluate(() => {
+			const firstPaint = window.performance.getEntriesByName("first-paint")
+			const firstContentfulPaint = window.performance.getEntriesByName("first-contentful-paint")
+			return JSON.stringify({firstPaint, firstContentfulPaint})
+		})
+		performanceInfo = JSON.parse(performanceInfo)
+
+		console.log(performanceInfo)
 	}, MAX_TIMEOUT)
 })
